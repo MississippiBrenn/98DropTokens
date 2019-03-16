@@ -8,11 +8,14 @@ class Game
 
   def display_board
     @board.each do |row|
+      print("|")
       row.each do |cell|
-        print ("#{cell.to_s}")
+        print ("#{cell.to_s} ")
       end
       puts
     end
+    puts("+--------")
+    puts(" 1 2 3 4")
   end
 
 
@@ -20,23 +23,23 @@ class Game
     @currentPlayer = "2"
     @plays = []
     loop do
-
-      # draw()
+      hasWon()
+      draw()
       @userInput = gets.chomp.downcase
       if @userInput == "exit"
         system "clear" or system "cls"
         exit
       elsif @userInput == "get"
-        puts "get stuff"
+        @plays.each do |play|
+          puts ("#{play}")
+        end
       elsif @userInput == "board"
         display_board
       elsif @userInput.include? "put"
         @currentPlayer=="1" ? @currentPlayer="2" : @currentPlayer= "1"
         column = @userInput[-1].to_i-1
         dropColumn(column)
-        @plays<<[column]
-      elsif @userInput == "win"
-        hasWon()
+        @plays<<column
       end
     end
   end
@@ -68,31 +71,29 @@ class Game
         if cell == @currentPlayer
           if columnIndex === 0 && rowIndex === 0
             if leftDiagonalWin(rowIndex,columnIndex)
-              puts('WIN')
+              puts('WINldiag')
             end
           end
 
           if columnIndex >= @winningLength && rowIndex >= @winningLength
-            puts ("indiagonal win")
             if rightDiagonalWin(rowIndex,columnIndex)
-              puts('WIN')
+              puts('WINrDiag')
             end
           end
 
 
           if rowIndex >= @winningLength
             if verticalWin(columnIndex)
-              puts('WIN')
+              puts('WINvert')
             end
 
           end
           if columnIndex >= @winningLength
             if horizontalWin(rowIndex)
-              puts('WIN')
+              puts('WINhorizontal')
             end
           end
         end
-        puts(" #{rowIndex},#{columnIndex},")
         columnIndex+=1
       end
       rowIndex+=1
@@ -101,8 +102,7 @@ class Game
 
   def leftDiagonalWin(rowIndex, columnIndex)
     i =  0
-
-    while i > @board.length
+    while i >= @board.length
       if @board[rowIndex+i][columnIndex+i] != @currentPlayer.to_s
         return false
       end
@@ -114,7 +114,7 @@ class Game
   def rightDiagonalWin(rowIndex, columnIndex)
     i = @board.length
 
-    while i > 0
+    while i >= 0
       if @board[rowIndex-i][columnIndex-i] != @currentPlayer.to_s
         return false
       end
@@ -125,7 +125,7 @@ class Game
 
   def horizontalWin(rowIndex)
     i = @board.length[0]
-    while i > 0
+    while i >= 0
       if @board[rowIndex][i] != @currentPlayer.to_s
         return false
       end
@@ -137,7 +137,7 @@ class Game
 
   def verticalWin(columnIndex)
     i = @board.length-1
-    while i > 0
+    while i >= 0
       if @board[i][columnIndex] != @currentPlayer.to_s
         return false
       end
@@ -147,11 +147,13 @@ class Game
   end
 
 
-  # def draw
-  #   if @plays. = @board.length * @board[0].length
-  #     puts ("DRAW")
-  #   end
-  # end
+  def draw
+    numberOfPlays = @plays.count
+    boardSpaces = @board.length * @board[0].length
+    if numberOfPlays == boardSpaces
+      puts ("DRAW")
+    end
+  end
 end
 
 class GameSetup
