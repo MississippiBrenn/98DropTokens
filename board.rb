@@ -8,14 +8,14 @@ class Game
 
   def display_board
     @board.each_with_index do |row, rowIndex|
-      print("|row #{rowIndex}|")
+      print("| ")
       row.each_with_index do |cell, index|
-        print ("|cell#{index}|#{cell.to_s} ")
+        print ("#{cell.to_s} ")
       end
       puts
     end
     puts("+--------")
-    puts(" 1 2 3 4")
+    puts("  1 2 3 4")
   end
 
 
@@ -69,29 +69,27 @@ class Game
       row.each do |cell|
         if cell == @currentPlayer
           if columnIndex === 0 && rowIndex === 0
-            puts("inleftDiag")
             if leftDiagonalWin(rowIndex,columnIndex)
-              puts('WINldiag')
+              puts('WIN')
             end
           end
 
           if columnIndex >= @winningLength && rowIndex === 0
-            puts("inrightDiag")
             if rightDiagonalWin(rowIndex,columnIndex)
-              puts('WINrDiag')
+              puts('WIN')
             end
           end
 
 
           if rowIndex >= @winningLength
             if verticalWin(columnIndex)
-              puts('WINvert')
+              puts('WIN')
             end
 
           end
           if columnIndex >= @winningLength
             if horizontalWin(rowIndex)
-              puts('WINhorizontal')
+              puts('WIN')
             end
           end
         end
