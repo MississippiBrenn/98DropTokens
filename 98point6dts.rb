@@ -1,3 +1,5 @@
+# chose to use pry as this functions as interface
+# also looked into usign option parser of Thor
 require 'pry'
 
 
@@ -18,7 +20,7 @@ class Game
     puts("  1 2 3 4")
   end
 
-
+  # begins the game and continues until exit is called by user
   def play
     @currentPlayer = "2"
     @plays = []
@@ -34,15 +36,24 @@ class Game
         end
       elsif @userInput == "board"
         display_board
-      elsif @userInput.include? "put"
+      elsif @userInput.include? "put "
         @currentPlayer=="1" ? @currentPlayer="2" : @currentPlayer= "1"
-        column = @userInput[-1].to_i-1
-        dropColumn(column)
-        @plays<<column
+        if @userInput.to_i.to_s == @userInput
+          column = @userInput[-1].to_i-1
+          dropColumn(column)
+          @plays<<column
+        end
+      else
+        puts "Please enter valid command."
+        puts "BOARD - prints board"
+        puts "PUT <column> - places token in column(eg. PUT 4)"
+        puts "GET - returns columns played"
+        puts "EXIT - exits program"
       end
     end
   end
 
+  # places token based on availble squares in column, in asc order
   def dropColumn(column)
     if @board[3][column] == 0
       @board[3][column] = @currentPlayer
@@ -61,6 +72,8 @@ class Game
     end
   end
 
+  # determines if there is a connecting line of 4
+  # chose to keep this responsive to changes in winningLength and board size
   def hasWon
     @winningLength = 4-1
     rowIndex = 0
@@ -144,7 +157,7 @@ class Game
     return true
   end
 
-
+  # if all plays have taken place and no win has happened, it is a draw
   def draw
     numberOfPlays = @plays.count
     boardSpaces = @board.length * @board[0].length
@@ -154,6 +167,7 @@ class Game
   end
 end
 
+# sets up board
 class GameSetup
   attr_reader :board
   def initialize
@@ -162,7 +176,7 @@ class GameSetup
 end
 
 
-
+# starts program within file
 new_game = Game.new
 
 new_game.play
