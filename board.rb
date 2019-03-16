@@ -7,10 +7,10 @@ class Game
   end
 
   def display_board
-    @board.each do |row|
-      print("|")
-      row.each do |cell|
-        print ("#{cell.to_s} ")
+    @board.each_with_index do |row, rowIndex|
+      print("|row #{rowIndex}|")
+      row.each_with_index do |cell, index|
+        print ("|cell#{index}|#{cell.to_s} ")
       end
       puts
     end
@@ -27,7 +27,6 @@ class Game
       draw()
       @userInput = gets.chomp.downcase
       if @userInput == "exit"
-        system "clear" or system "cls"
         exit
       elsif @userInput == "get"
         @plays.each do |play|
@@ -70,12 +69,14 @@ class Game
       row.each do |cell|
         if cell == @currentPlayer
           if columnIndex === 0 && rowIndex === 0
+            puts("inleftDiag")
             if leftDiagonalWin(rowIndex,columnIndex)
               puts('WINldiag')
             end
           end
 
-          if columnIndex >= @winningLength && rowIndex >= @winningLength
+          if columnIndex >= @winningLength && rowIndex === 0
+            puts("inrightDiag")
             if rightDiagonalWin(rowIndex,columnIndex)
               puts('WINrDiag')
             end
@@ -102,7 +103,7 @@ class Game
 
   def leftDiagonalWin(rowIndex, columnIndex)
     i =  0
-    while i >= @board.length
+    while i <= @board.length-1
       if @board[rowIndex+i][columnIndex+i] != @currentPlayer.to_s
         return false
       end
@@ -112,13 +113,12 @@ class Game
   end
 
   def rightDiagonalWin(rowIndex, columnIndex)
-    i = @board.length
-
-    while i >= 0
-      if @board[rowIndex-i][columnIndex-i] != @currentPlayer.to_s
+    i = 0
+    while i <= @board.length-1
+      if @board[rowIndex+i][columnIndex-i] != @currentPlayer.to_s
         return false
       end
-      i -= 1
+      i += 1
     end
     return true
   end
